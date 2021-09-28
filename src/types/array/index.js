@@ -1,5 +1,6 @@
 const { MappingBaseType } = require("../base");
 const { isObjectType, isArray, isReferenceArray } = require("../util");
+const { propsToMapping } = require("../../props-to-mapping")
 
 function toArray(obj) {
   return isArray(obj.type) && MappingArray.create(obj).convert();
@@ -18,7 +19,14 @@ class MappingArray extends MappingBaseType {
   }
 
   get resolvedResult() {
-    const result = this.createResult();
+    let result = this.createResult();
+
+    if (result.type == 'object') {
+      let parent_name = this.resolveFirstItem.key
+      let properties = this.resolveFirstItem.properties
+      result.properties = propsToMapping({ parent_name, properties}, this.config)
+    }
+
     if (this.isReference) {
       delete result.type
     };
@@ -26,7 +34,7 @@ class MappingArray extends MappingBaseType {
   }
 
   get includeInParent() {
-    return true;
+    return false;
   }
 
   get resolvedEntry() {
