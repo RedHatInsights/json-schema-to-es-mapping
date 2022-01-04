@@ -136,7 +136,8 @@ class MappingNumber extends MappingRange {
 
   get numericFormat() {
     return {
-      integer: "integer"
+      integer: "integer",
+      int64: "long"
     };
   }
 
